@@ -2,10 +2,10 @@ $(document).ready(function () {
 
     //Array of movies
     var movies = ["Jurrasic Park", "Tombstone", "Dances with Wolves", "Annabelle",
-    "Titanic", "Man on Fire", "X-Men", "Dirty Harry", "King Kong", "GoodFellas", "Lord of the Rings", "Alien", 
-    "The Count of Monte Cristo", "Avatar", "Terminator", "The Conjuring", "Scarface"];
+        "Titanic", "Man on Fire", "X-Men", "Dirty Harry", "King Kong", "GoodFellas", "Lord of the Rings", "Alien",
+        "The Count of Monte Cristo", "Avatar", "Terminator", "The Conjuring", "Scarface"];
 
-    //Function for displaying movie data
+    //Function for displaying movie buttons
     function renderButtons() {
         $("#movie-buttons").empty();
 
@@ -17,22 +17,19 @@ $(document).ready(function () {
             addButton.addClass("movie");
             //Adding a data attribute with the value of the movie at index i
             addButton.attr("data-name", movies[i]);
-            //Providing the buttons text with a value of the movei at index i
+            //Providing the buttons text with a value of the movie at index i
             addButton.text(movies[i]);
             //Adding the button to the HTML
             $("#movie-buttons").append(addButton);
         }
     }
 
-    //This function handles events where one button is clicked
+    //This function prevents form from refreshing and adds movie to array
     $("#add-movie").on("click", function (event) {
-        //event.preventDefault() prevents form from resubmitting, user can click return
         event.preventDefault();
-
-        //This line will grab the text from the input box
+        //Gets movie from input box and removes any spaces
         var movie = $("#movie-input").val().trim();
-
-        //The movie from the textbox is then added to our array
+        //Adds (pushes) movie into movies array
         movies.push(movie);
 
         //Calling renderButtons which handles the processing of our movie array
@@ -41,12 +38,10 @@ $(document).ready(function () {
 
     //Trying to connect giphy
     $(document).on("click", function () {
-        $("#searches").empty();
+        $("#movie-search-results").empty();
 
-        var movies = $(this).attr("addButton");
-
-        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
-            movies + "&api_key=jRge9W0eEBduCk4djUlAhUKB3UtKJK9q&limit=10";
+        var movies = $(this).attr("data-name");
+        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + movies + "&api_key=jRge9W0eEBduCk4djUlAhUKB3UtKJK9q&limit=10";
 
         $.ajax({
             url: queryURL,
@@ -55,36 +50,31 @@ $(document).ready(function () {
 
             // After the data comes back from the API
             .then(function (response) {
-                // Storing an array of results in the results variable
-                var results = response.data;
+            // Storing an array of results in the results variable
+            var results = response.data;
+            console.log(response.data);
 
-                // Looping over every result item
+                //Looping over every result item
                 for (var i = 0; i < results.length; i++) {
 
-                    // Only taking action if the photo has an appropriate rating
-                    if (results[i].rating !== "r" && results[i].rating !== "pg-13") {
-                        // Creating a div for the gif
-                        var gifDiv = $("<div>");
-
-                        // Storing the result item's rating
+                    //Grabbing only movies with a rating less than "r"
+                    if (results[i].rating !== "r") {
+                        //Creating a div for the gif
+                        var movieDiv = $("<div>");
+                        //Storing the result item's rating
                         var rating = results[i].rating;
-
-                        // Creating a paragraph tag with the result item's rating
+                        //Paragraph tag with the movies rating
                         var p = $("<p>").text("Rating: " + rating);
+                        //Creating an image tag
+                        var movieGif = $("<img>");
+                        //Giving the image tag an src attribute of a proprty pulled off the result item
+                        movieGif.attr("src", results[i].images.fixed_height.url);
+                    
+                        movieDiv.append(p);
+                        movieDiv.append(movieGif);
 
-                        // Creating an image tag
-                        var personImage = $("<img>");
-
-                        // Giving the image tag an src attribute of a proprty pulled off the
-                        // result item
-                        personImage.attr("src", results[i].images.fixed_height.url);
-
-                        // Appending the paragraph and personImage we created to the "gifDiv" div we created
-                        gifDiv.append(p);
-                        gifDiv.append(personImage);
-
-                        // Prepending the gifDiv to the "#gifs-appear-here" div in the HTML
-                        $("#gifs-appear-here").prepend(gifDiv);
+                        //Prepending movieDiv in the HTML
+                        $("#movie-search-results").prepend(movieDiv);
                     }
                 }
             });

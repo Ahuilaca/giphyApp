@@ -37,7 +37,7 @@ $(document).ready(function () {
     });
 
     //Trying to connect giphy
-    $(document).on("click", function () {
+    $(document).on("click", "button", function () {
         $("#movie-search-results").empty();
 
         var movies = $(this).attr("data-name");

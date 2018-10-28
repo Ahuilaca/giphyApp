@@ -29,6 +29,7 @@ $(document).ready(function () {
         event.preventDefault();
         //Gets movie from input box and removes any spaces
         var movie = $("#movie-input").val().trim();
+        
         //Adds (pushes) movie into movies array
         movies.push(movie);
 

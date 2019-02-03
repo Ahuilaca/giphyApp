@@ -6,6 +6,8 @@ body {
   h1 {
       text-align:center;
       font-size: 75px;
+      font-family: 'Fontdiner Swanky', cursive;
+      /* font-family: 'Henny Penny', cursive; */
   }
 
   #container {

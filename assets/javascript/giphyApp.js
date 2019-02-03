@@ -29,7 +29,7 @@ $(document).ready(function () {
         event.preventDefault();
         //Gets movie from input box and removes any spaces
         var movie = $("#movie-input").val().trim();
-        
+
         //Adds (pushes) movie into movies array
         movies.push(movie);
 
@@ -51,9 +51,9 @@ $(document).ready(function () {
 
             // After the data comes back from the API
             .then(function (response) {
-            // Storing an array of results in the results variable
-            var results = response.data;
-            console.log(response.data);
+                // Storing an array of results in the results variable
+                var results = response.data;
+                console.log(response.data);
 
                 //Looping over every result item
                 for (var i = 0; i < results.length; i++) {
@@ -67,12 +67,23 @@ $(document).ready(function () {
                         //Paragraph tag with the movies rating
                         var p = $("<p>").text("Rating: " + rating);
                         //Creating an image tag
-                        var movieGif = $("<img>");
+                        //var movieGif = $("<img>");
                         //Giving the image tag an src attribute of a proprty pulled off the result item
-                        movieGif.attr("src", results[i].images.fixed_height.url);
-                    
+                        //movieGif.attr("src", results[i].images.fixed_height.url);
+                        
+
+                        var animated = results[i].images.fixed_height.url;
+                        var still = results[i].images.fixed_height_still.url;
+
+                        var movieClip = $("<img>");
+                        movieClip.attr("src", still);
+                        movieClip.attr("data-still", still);
+                        movieClip.attr("data-animate", animated);
+                        movieClip.attr("data-state", "still");
+                        movieClip.addClass("animal-image");
+
                         movieDiv.append(p);
-                        movieDiv.append(movieGif);
+                        movieDiv.append(movieClip);
 
                         //Prepending movieDiv in the HTML
                         $("#movie-search-results").prepend(movieDiv);
